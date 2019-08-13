@@ -25,20 +25,20 @@ window.fbAsyncInit = function() {
       version    : '{api-version}' 
     });
 
-
+							//check if user is already logged in
     function checkLoginState() {
-    FB.getLoginStatus(function(response) {
+    FB.getLoginStatus(function(response) {		
       statusChangeCallback(response);
     }); }
 
 
-    function statusChangeCallback(response) {
+    function statusChangeCallback(response) {			//response - obj. have status , auth report 
       console.log('statusChangeCallback');
       console.log(response);
       if (response.status === 'connected') {
         // Logged into your app and Facebook.
         console.log('logged in and authenticated')
-        testAPI();
+        testAPI();									//test case
     }   else {
         // The person is not logged into your app or we are unable to tell.
         document.getElementById('status').innerHTML = 'Please log ' +
@@ -55,7 +55,7 @@ window.fbAsyncInit = function() {
     fjs.parentNode.insertBefore(js, fjs);}
    (document, 'script', 'facebook-jssdk'));
 
-     function testAPI() {
+     function testAPI() {								//testing
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
       console.log('Successful login for: ' + response.name);
