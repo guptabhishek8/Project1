@@ -2,7 +2,7 @@
 function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
         var profile = googleUser.getBasicProfile();
-        console.log("ID: " + profile.getId()); 
+        document.write("ID: " + profile.getId()); 
         // Don't s'end this directly to your server!
         console.log('Full Name: ' + profile.getName());
         console.log('Given Name: ' + profile.getGivenName());
@@ -15,6 +15,16 @@ function onSignIn(googleUser) {
         console.log("ID Token: " + id_token);
 	}
 
+     // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+     function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+      console.log('Successful login for: ' + response.name);
+      document.getElementById('status').innerHTML =
+        'Thanks for logging in, ' + response.name + '!';
+    }); 
+  }
 
 // FACEBOOK LOG-IN
 window.fbAsyncInit = function() {
@@ -25,20 +35,21 @@ window.fbAsyncInit = function() {
       version    : '{api-version}' 
     });
 
-							//check if user is already logged in
+
     function checkLoginState() {
-    FB.getLoginStatus(function(response) {		
+    FB.getLoginStatus(function(response) {
       statusChangeCallback(response);
     }); }
 
 
-    function statusChangeCallback(response) {			//response - obj. have status , auth report 
+    function statusChangeCallback(response) {
       console.log('statusChangeCallback');
       console.log(response);
       if (response.status === 'connected') {
         // Logged into your app and Facebook.
-        console.log('logged in and authenticated')
-        testAPI();									//test case
+        console.log('logged in and authenticated');
+        //just to test , use testapi
+        testAPI();
     }   else {
         // The person is not logged into your app or we are unable to tell.
         document.getElementById('status').innerHTML = 'Please log ' +
@@ -54,12 +65,3 @@ window.fbAsyncInit = function() {
     js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);}
    (document, 'script', 'facebook-jssdk'));
-
-     function testAPI() {								//testing
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-      console.log('Successful login for: ' + response.name);
-      document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
-    });
-  }  
