@@ -2,7 +2,7 @@
 function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
         var profile = googleUser.getBasicProfile();
-        document.write("ID: " + profile.getId()); 
+        console.log("ID: " + profile.getId()); 
         // Don't s'end this directly to your server!
         console.log('Full Name: ' + profile.getName());
         console.log('Given Name: ' + profile.getGivenName());
@@ -15,53 +15,55 @@ function onSignIn(googleUser) {
         console.log("ID Token: " + id_token);
 	}
 
-     // Here we run a very simple test of the Graph API after login is
-  // successful.  See statusChangeCallback() for when this call is made.
-     function testAPI() {
+// FACEBOOK LOG-IN
+
+
+  function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
+    console.log('statusChangeCallback');
+    console.log(response);                   // The current login status of the person.
+    if (response.status === 'connected') {   // Logged into your webpage and Facebook.
+      testAPI();                                                                                              //for testing
+    } else {                                 // Not logged into your webpage or we are unable to tell.
+      document.getElementById('status').innerHTML = 'Please log ' + 'into this webpage.';
+    }
+  }
+
+function checkLoginState() {               // Called when a person is finished with the Login Button.
+    FB.getLoginStatus(function(response) {   // See the onlogin handler
+      statusChangeCallback(response);
+    });
+  }
+
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '884289785283365',
+      cookie     : true,                     // Enable cookies to allow the server to access the session.
+      xfbml      : true,                     // Parse social plugins on this webpage.
+      version    : 'v2.7'           // Use this Graph API version for this call.
+    });
+
+
+    FB.getLoginStatus(function(response) {   // Called after the JS SDK has been initialized.
+      statusChangeCallback(response);        // Returns the login status.
+    });
+  };
+
+  
+  (function(d, s, id) {                      // Load the SDK asynchronously
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+ 
+  function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
       console.log('Successful login for: ' + response.name);
       document.getElementById('status').innerHTML =
         'Thanks for logging in, ' + response.name + '!';
-    }); 
-  }
-
-// FACEBOOK LOG-IN
-window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '884289785283365',
-      cookie     : true,  
-      xfbml      : true,  
-      version    : '{api-version}' 
     });
-
-
-    function checkLoginState() {
-    FB.getLoginStatus(function(response) {
-      statusChangeCallback(response);
-    }); }
-
-
-    function statusChangeCallback(response) {
-      console.log('statusChangeCallback');
-      console.log(response);
-      if (response.status === 'connected') {
-        // Logged into your app and Facebook.
-        console.log('logged in and authenticated');
-        //just to test , use testapi
-        testAPI();
-    }   else {
-        // The person is not logged into your app or we are unable to tell.
-        document.getElementById('status').innerHTML = 'Please log ' +
-          'into this app.';
-    }
   }
-
-  // Load the SDK asynchronously
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);}
-   (document, 'script', 'facebook-jssdk'));
